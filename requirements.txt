@@ -1,9 +1,9 @@
-streamlit==1.22.0
-pandas==1.5.3
-torch==1.13.1
-transformers==4.27.4
-joblib==1.2.0
-spacy==3.5.2
-PyPDF2==3.0.1
-python-docx==0.8.11
+streamlit
+pandas
+torch
+transformers
+joblib
+spacy
+PyPDF2
+python-docx
 https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.5.0/en_core_web_lg-3.5.0.tar.gz
