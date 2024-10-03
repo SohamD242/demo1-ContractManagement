@@ -1,6 +1,5 @@
 import streamlit as st
 
-# Set page config at the very beginning
 st.set_page_config(page_title="Advanced Contract Analysis App", layout="wide")
 
 import pandas as pd
@@ -13,7 +12,6 @@ from PyPDF2 import PdfReader
 import docx
 import io
 
-# Load models and resources
 @st.cache_resource
 def load_models():
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -26,7 +24,6 @@ def load_models():
 
 contract_model, contract_tokenizer, contract_label_encoder, nlp, device = load_models()
 
-# Set up span ruler for clause detection
 if "span_ruler" not in nlp.pipe_names:
     ruler = nlp.add_pipe("span_ruler")
 else:
@@ -87,12 +84,10 @@ def detect_and_classify_clauses(text):
     clauses = [(span.text, span.label_) for span in doc.spans["test"]]
     df = pd.DataFrame(clauses, columns=["Clause Content", "Clause Type"])
     
-    # Remove duplicate clauses
     df = df.drop_duplicates(subset=["Clause Content"])
     
     return df
 
-# Streamlit UI
 st.title("📄 Advanced Contract Analysis App")
 st.subheader("Upload a contract (PDF or Word) to detect the contract type and specific clauses using AI.")
 
@@ -109,15 +104,13 @@ if uploaded_file is not None:
         else:
             st.error("Unsupported file type!")
 
-        # Display extracted text preview
         with st.expander("📄 Extracted Text Preview"):
             st.write(extracted_text[:500] + '...')
 
-        # Predict contract type
+
         contract_type = predict_contract_type(extracted_text)
         st.markdown(f"### Contract Type: **:blue[{contract_type}]**")
 
-        # Detect and display clauses
         clause_df = detect_and_classify_clauses(extracted_text)
 
         st.subheader("Detected Clauses")
@@ -135,7 +128,6 @@ if uploaded_file is not None:
 
     st.success("Analysis complete!")
 
-    # Add a download button for the analysis results
     analysis_results = f"Contract Type: {contract_type}\n\n"
     for clause_type, group in grouped_clauses:
         analysis_results += f"{clause_type} Clauses:\n"
@@ -149,7 +141,6 @@ if uploaded_file is not None:
         mime="text/plain"
     )
 
-# Sidebar with app information
 st.sidebar.header("About this app")
 st.sidebar.info("""
 This advanced app uses a fine-tuned LegalBERT model to classify legal contracts and a custom clause detection model to identify specific clauses with improved accuracy and meaningfulness.
